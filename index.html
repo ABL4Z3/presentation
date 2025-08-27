@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI is Not Magic, It's a Recipe: An Interactive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Cool Blues and Grays" -->
+    <!-- Application Structure Plan: A single-page, vertically scrolling application with a sticky navigation header. This structure allows users to either follow a linear, story-like path from top to bottom or use the navigation to jump directly to a topic of interest (e.g., "How AI Learns" or the "NLP Deep Dive"). This is more user-friendly than a rigid slide-by-slide format, encouraging exploration. Key interactions include a clickable neuron diagram, a simulated 'live demo' module, interactive charts for NLP concepts, and a step-by-step sentence analysis tool. This design prioritizes making abstract concepts tangible and interactive. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Neural Network concept -> Goal: Inform -> Viz: Interactive Diagram (HTML/JS) -> Interaction: Click to reveal details -> Justification: More engaging than a static image.
+        - Report Info: Teachable Machine Demo -> Goal: Demonstrate Process -> Viz: Simulated UI (HTML/JS) -> Interaction: Buttons to 'train' and 'test' -> Justification: Safely mimics a live demo within the app.
+        - Report Info: Bag of Words -> Goal: Compare -> Viz: Bar Chart -> Interaction: Hover for tooltips -> Justification: Clearly shows word frequency counts. -> Library: Chart.js (Canvas).
+        - Report Info: Word Embeddings -> Goal: Show Relationships -> Viz: Scatter Plot -> Interaction: Hover for labels -> Justification: Visually represents abstract concept of semantic clustering. -> Library: Chart.js (Canvas).
+        - Report Info: NLU Sentence Analysis -> Goal: Show Process -> Viz: Step-by-step interactive text display -> Interaction: Click 'Next' to progress -> Justification: Breaks down a complex process into digestible steps.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6; /* Light Gray */
+            color: #1F2937; /* Dark Gray */
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #3B82F6; /* Blue */
+            border-bottom-color: #3B82F6;
+        }
+        .section-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #3B82F6;
+            color: white;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-gray-800">AI: The Recipe</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#intro" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Intro</a>
+                        <a href="#learning" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">How AI Learns</a>
+                        <a href="#demo" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Live Demo</a>
+                        <a href="#nlp" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">NLP Deep Dive</a>
+                        <a href="#conclusion" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Conclusion</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <section id="intro" class="text-center pt-8 pb-16">
+            <div class="flex flex-col items-center justify-center mb-12">
+                <img src="https://images.shiksha.com/mediadata/images/1612002039phpEJv3qt.jpeg" alt="MIT Moradabad Logo" class="h-50 w-50 object-contain mb-4">
+                <h2 class="text-4xl font-bold text-gray-800">MIT Group of Institutions, Moradabad</h2>
+                <div class="mt-4 text-gray-600">
+                    <p class="font-semibold">Presented By: Aayush Kumar</p>
+                    <p>Roll No: 2300821530034</p>
+                    <p>Course: B.Tech</p>
+                </div>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                AI is Not Magic, <br class="hidden md:block"> It's a <span class="text-blue-600">Recipe</span>
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
+                We ask AI to do amazing things, but how does it actually learn? This guide will uncover the core recipe that allows a machine to understand, reason, and create.
+            </p>
+        </section>
+
+        <section id="learning" class="section-card">
+            <h2 class="text-3xl font-bold text-center mb-8">How AI Learns: The Core Recipe</h2>
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div class="p-6 border border-gray-200 rounded-lg">
+                    <div class="text-4xl mb-4">🗂️</div>
+                    <h3 class="text-xl font-semibold mb-2">1. Learning with "Flashcards"</h3>
+                    <p class="text-gray-600">AI starts by learning from millions of labeled examples (like digital flashcards). This is called Supervised Learning, where the AI learns to map an input to the correct output.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-lg">
+                    <div class="text-4xl mb-4">🧠</div>
+                    <h3 class="text-xl font-semibold mb-2">2. The Artificial Brain</h3>
+                    <p class="text-gray-600">This learning happens in a Neural Network, inspired by the human brain. It's a web of digital "neurons" that work together to recognize patterns.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-lg">
+                    <div class="text-4xl mb-4">🔄</div>
+                    <h3 class="text-xl font-semibold mb-2">3. Guess, Check, Adjust</h3>
+                    <p class="text-gray-600">The network makes a guess, checks if it's correct, and adjusts its connections if it's wrong. This feedback loop, repeated millions of times, is what we call "training."</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="section-card">
+             <h2 class="text-3xl font-bold text-center mb-2">From Theory to Practice</h2>
+             <p class="text-center text-gray-600 mb-8">This isn't just theory. Let's simulate training a simple AI model, similar to Google's Teachable Machine.</p>
+             <div class="bg-gray-100 p-6 rounded-lg grid md:grid-cols-2 gap-6 items-center">
+                <div>
+                    <h3 class="font-semibold text-lg mb-4">Training Controls</h3>
+                    <p class="text-sm text-gray-600 mb-4">Click the buttons to provide "training data" to our model. Then, use the "Test" buttons to see if it learned correctly.</p>
+                    <div class="space-y-3">
+                        <button id="trainPen" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">Provide 'Pen' Images 🖊️</button>
+                        <button id="trainBottle" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">Provide 'Bottle' Images 💧</button>
+                    </div>
+                     <hr class="my-4">
+                     <div class="space-y-3">
+                        <button id="testPen" class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors">Test with Pen</button>
+                        <button id="testBottle" class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors">Test with Bottle</button>
+                    </div>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-4 text-center">
+                    <div class="w-full h-48 bg-black rounded-md flex items-center justify-center mb-4">
+                        <p id="webcamFeed" class="text-gray-400">Webcam Feed</p>
+                    </div>
+                    <div id="modelStatus" class="bg-gray-700 text-white p-3 rounded-md">
+                        <h4 class="font-semibold">Model Status: <span id="statusText" class="font-normal">Untrained</span></h4>
+                        <div class="w-full bg-gray-600 rounded-full h-2.5 mt-2">
+                            <div id="confidenceBar" class="bg-blue-500 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <p class="text-sm mt-2">Prediction: <span id="predictionText">None</span></p>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <section id="nlp" class="section-card">
+            <h2 class="text-3xl font-bold text-center mb-2">NLP Deep Dive</h2>
+            <p class="text-center text-gray-600 mb-8">How machines understand and generate human language.</p>
+            
+            <div class="mb-6 border-b border-gray-200">
+                <div class="flex justify-center -mb-px space-x-4">
+                    <button class="tab-button active py-2 px-4 font-semibold border-b-2 border-transparent" data-tab="1">1. Words to Numbers</button>
+                    <button class="tab-button py-2 px-4 font-semibold border-b-2 border-transparent" data-tab="2">2. Analyzing a Sentence</button>
+                    <button class="tab-button py-2 px-4 font-semibold border-b-2 border-transparent" data-tab="3">3. Generating a Response</button>
+                </div>
+            </div>
+
+            <div id="tabContent">
+                <!-- Tab 1: Words to Numbers -->
+                <div class="tab-pane active" data-tab-content="1">
+                    <p class="text-center mb-8">Before a computer can "understand," it must turn words into numbers. Here are three key methods.</p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 text-center">Bag of Words (BoW)</h3>
+                            <p class="text-gray-600 mb-4">The simplest method. It counts word frequency, ignoring grammar and order. It's fast, but loses context.</p>
+                            <div class="chart-container">
+                                <canvas id="bowChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 text-center">Word Embeddings</h3>
+                            <p class="text-gray-600 mb-4">The modern approach. It maps words to a conceptual space, where similar words are clustered together, capturing meaning and context.</p>
+                             <div class="chart-container">
+                                <canvas id="embeddingChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2 text-center">TF-IDF: Finding Important Words</h3>
+                        <p class="text-gray-600 text-center">A smarter method that scores words based on how frequent they are in one document versus how rare they are across all documents. This helps identify key topics.</p>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Analyzing a Sentence -->
+                <div class="tab-pane hidden" data-tab-content="2">
+                    <p class="text-center mb-6">Let's see how an AI processes a sentence step-by-step. Click 'Next' to see the process unfold.</p>
+                    <div class="bg-gray-100 p-6 rounded-lg">
+                        <div id="sentenceAnalysisBox" class="text-2xl font-mono p-4 bg-white rounded-md text-center min-h-[6rem] flex items-center justify-center">
+                            "Anjali from Moradabad is enjoying the tasty biryani."
+                        </div>
+                        <div class="text-center mt-4">
+                            <button id="analysisNextBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">Start Analysis</button>
+                            <p id="analysisStepName" class="mt-2 font-semibold text-gray-700"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Generating a Response -->
+                <div class="tab-pane hidden" data-tab-content="3">
+                    <p class="text-center mb-6">Natural Language Generation (NLG) does the reverse: it turns structured data back into human-readable text.</p>
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                        <div class="bg-gray-100 p-4 rounded-lg text-left font-mono text-sm w-full md:w-auto">
+                            <pre><code>{
+  Person: "Anjali",
+  Action: "enjoying",
+  Object: "biryani",
+  Sentiment: "Positive"
+}</code></pre>
+                        </div>
+                        <div class="text-4xl text-blue-500 font-bold">→</div>
+                        <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg w-full md:w-auto">
+                            <p class="font-semibold">"Anjali is enjoying the biryani."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="section-card text-center">
+            <h2 class="text-3xl font-bold mb-4">It's Not Magic, It's Math.</h2>
+            <p class="text-gray-600 max-w-3xl mx-auto mb-8">The secret ingredient to AI isn't magic. It's about training a model on vast amounts of data to recognize patterns and calculate the probability of what should come next—whether that's identifying a cat or choosing the next word in a sentence.</p>
+            <h3 class="text-2xl font-bold mb-4">The Big Questions for Our Future</h3>
+            <div class="grid md:grid-cols-3 gap-6 text-left">
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <h4 class="font-semibold">Bias in, Bias out</h4>
+                    <p class="text-sm text-gray-600">If AI learns from our data, how do we stop it from learning our biases?</p>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <h4 class="font-semibold">The Nature of Creativity</h4>
+                    <p class="text-sm text-gray-600">What does creativity mean when a machine can create art and music?</p>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <h4 class="font-semibold">A Tool for Humanity</h4>
+                    <p class="text-sm text-gray-600">How do we ensure AI is used ethically to help humanity flourish?</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Navigation scrollspy
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === entry.target.id) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, { rootMargin: '-50% 0px -50% 0px' });
+
+    sections.forEach(section => observer.observe(section));
+
+    // Simulated Demo Logic
+    const statusText = document.getElementById('statusText');
+    const predictionText = document.getElementById('predictionText');
+    const confidenceBar = document.getElementById('confidenceBar');
+    const webcamFeed = document.getElementById('webcamFeed');
+    let modelState = { trainedOnPen: false, trainedOnBottle: false };
+
+    document.getElementById('trainPen').addEventListener('click', () => {
+        modelState.trainedOnPen = true;
+        updateStatus();
+    });
+    document.getElementById('trainBottle').addEventListener('click', () => {
+        modelState.trainedOnBottle = true;
+        updateStatus();
+    });
+
+    document.getElementById('testPen').addEventListener('click', () => testModel('pen'));
+    document.getElementById('testBottle').addEventListener('click', () => testModel('bottle'));
+
+    function updateStatus() {
+        if (modelState.trainedOnPen && modelState.trainedOnBottle) {
+            statusText.textContent = 'Fully Trained';
+        } else if (modelState.trainedOnPen || modelState.trainedOnBottle) {
+            statusText.textContent = 'Partially Trained';
+        }
+    }
+
+    function testModel(item) {
+        webcamFeed.innerHTML = `<span class="text-4xl">${item === 'pen' ? '🖊️' : '💧'}</span>`;
+        let prediction = 'Unknown';
+        let confidence = 0;
+
+        if (modelState.trainedOnPen && modelState.trainedOnBottle) {
+            prediction = item === 'pen' ? 'Pen' : 'Bottle';
+            confidence = Math.floor(Math.random() * 10) + 90; // 90-99%
+        } else if (modelState.trainedOnPen && item === 'pen') {
+            prediction = 'Pen';
+            confidence = Math.floor(Math.random() * 20) + 70; // 70-89%
+        } else if (modelState.trainedOnBottle && item === 'bottle') {
+            prediction = 'Bottle';
+            confidence = Math.floor(Math.random() * 20) + 70; // 70-89%
+        } else {
+            confidence = Math.floor(Math.random() * 40); // 0-39%
+        }
+        
+        predictionText.textContent = `${prediction} (${confidence}%)`;
+        confidenceBar.style.width = `${confidence}%`;
+    }
+
+    // NLP Tabs Logic
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.dataset.tab;
+
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            tabPanes.forEach(pane => {
+                if (pane.dataset.tabContent === tabId) {
+                    pane.classList.remove('hidden');
+                    pane.classList.add('active');
+                } else {
+                    pane.classList.add('hidden');
+                    pane.classList.remove('active');
+                }
+            });
+        });
+    });
+
+    // Chart.js - Bag of Words
+    const bowCtx = document.getElementById('bowChart').getContext('2d');
+    new Chart(bowCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Anjali', 'likes', 'tasty', 'biryani', 'burgers'],
+            datasets: [{
+                label: 'Word Count',
+                data: [2, 2, 2, 1, 1],
+                backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                borderColor: 'rgba(59, 130, 246, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1 }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Sentence 1: "Anjali likes tasty biryani."\nSentence 2: "Anjali likes tasty burgers."' }
+            }
+        }
+    });
+
+    // Chart.js - Word Embeddings
+    const embeddingCtx = document.getElementById('embeddingChart').getContext('2d');
+    new Chart(embeddingCtx, {
+        type: 'scatter',
+        data: {
+            datasets: [
+                {
+                    label: 'Positive Emotions',
+                    data: [{x: 1, y: 2, label: 'Happy'}, {x: 1.5, y: 2.5, label: 'Joyful'}, {x: 0.8, y: 1.5, label: 'Elated'}],
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)'
+                },
+                {
+                    label: 'Negative Emotions',
+                    data: [{x: -2, y: -1, label: 'Sad'}, {x: -2.5, y: -1.5, label: 'Upset'}, {x: -1.8, y: -0.5, label: 'Depressed'}],
+                    backgroundColor: 'rgba(239, 68, 68, 0.7)'
+                },
+                {
+                    label: 'Objects',
+                    data: [{x: 0, y: -2, label: 'Car'}, {x: 0.5, y: -2.5, label: 'Truck'}, {x: -0.2, y: -1.8, label: 'Vehicle'}],
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.raw.label;
+                        }
+                    }
+                },
+                title: { display: true, text: 'Visualizing Word Meanings' }
+            }
+        }
+    });
+
+    // Sentence Analysis Logic
+    const analysisBox = document.getElementById('sentenceAnalysisBox');
+    const analysisBtn = document.getElementById('analysisNextBtn');
+    const stepName = document.getElementById('analysisStepName');
+    const originalSentence = "Anjali from Moradabad is enjoying the tasty biryani.";
+    let currentStep = 0;
+
+    const analysisSteps = [
+        {
+            name: "Step 1: Tokenization",
+            content: `<span class="bg-blue-100 p-1 rounded">Anjali</span> <span class="bg-blue-100 p-1 rounded">from</span> <span class="bg-blue-100 p-1 rounded">Moradabad</span> <span class="bg-blue-100 p-1 rounded">is</span> <span class="bg-blue-100 p-1 rounded">enjoying</span> ...`
+        },
+        {
+            name: "Step 2: Part-of-Speech Tagging",
+            content: `<span>Anjali<sub class="text-red-500">Noun</sub></span> <span>from<sub class="text-green-500">Prep</sub></span> <span>Moradabad<sub class="text-red-500">Noun</sub></span> <span>is<sub class="text-purple-500">Verb</sub></span> ...`
+        },
+        {
+            name: "Step 3: Named Entity Recognition",
+            content: `<span class="bg-yellow-200 p-1 rounded">Anjali<sub class="text-xs">PERSON</sub></span> from <span class="bg-green-200 p-1 rounded">Moradabad<sub class="text-xs">LOCATION</sub></span> is enjoying...`
+        },
+        {
+            name: "Step 4: Result -> Structured Data",
+            content: `<span class="text-base font-sans">Analysis Complete!</span>`
+        }
+    ];
+
+    analysisBtn.addEventListener('click', () => {
+        if (currentStep >= analysisSteps.length) {
+            currentStep = 0;
+            analysisBox.innerHTML = originalSentence;
+            stepName.textContent = "";
+            analysisBtn.textContent = "Start Analysis";
+            return;
+        }
+        
+        const step = analysisSteps[currentStep];
+        analysisBox.innerHTML = step.content;
+        stepName.textContent = step.name;
+        analysisBtn.textContent = "Next Step";
+        
+        if (currentStep === analysisSteps.length - 1) {
+            analysisBtn.textContent = "Reset";
+        }
+
+        currentStep++;
+    });
+
+});
+</script>
+
+</body>
+</html>
